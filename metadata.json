@@ -1,0 +1,5 @@
+{
+  "name": "AI Image Generator by Thanh Son",
+  "description": "An application to create and edit images using AI, based on user-provided text prompts, styles, and aspect ratios.",
+  "requestFramePermissions": []
+}
