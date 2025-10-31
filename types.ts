@@ -1,4 +1,5 @@
-export type AspectRatioValue = "1:1" | "16:9" | "9:16" | "4:3";
+// FIX: Add missing 3:4 aspect ratio.
+export type AspectRatioValue = "1:1" | "16:9" | "9:16" | "4:3" | "3:4";
 
 export type AspectRatio = {
   label: string;

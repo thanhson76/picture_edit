@@ -28,6 +28,8 @@ const ASPECT_RATIOS: AspectRatio[] = [
   { label: 'Ngang 16:9', value: '16:9' },
   { label: 'Dọc 9:16', value: '9:16' },
   { label: 'Rộng 4:3', value: '4:3' },
+  // FIX: Add missing 3:4 aspect ratio to UI options.
+  { label: 'Cao 3:4', value: '3:4' },
 ];
 const QUALITIES: ImageQuality[] = ['Standard', 'HD', 'FHD', '2K', '4K', '8K'];
 const NUM_IMAGES_OPTIONS = [1, 2, 3, 4];
@@ -42,6 +44,8 @@ const AspectRatioIcon: React.FC<{ ratio: AspectRatioValue }> = ({ ratio }) => {
     if (ratio === '16:9') classes += ' w-8 h-5';
     if (ratio === '9:16') classes += ' w-5 h-8';
     if (ratio === '4:3') classes += ' w-7 h-5';
+    // FIX: Add styling for the 3:4 aspect ratio icon.
+    if (ratio === '3:4') classes += ' w-5 h-7';
     return <div className={classes}></div>;
 };
 
@@ -184,7 +188,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
                                 <div>
                                     <h2 className="text-sm font-medium text-slate-300 mb-3">Tỷ lệ khung hình</h2>
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                                         {ASPECT_RATIOS.map(ratio => (
                                             <button
                                                 key={ratio.value}

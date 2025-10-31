@@ -18,9 +18,3 @@ View your app in AI Studio: https://ai.studio/apps/drive/1Mcocbudth2AIh9UE9Blkap
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
-Trong mục cấu hình, nhấn vào "Advanced build settings" hoặc tìm mục "Environment variables".
-Nhấn "Add a variable".
-Nhập thông tin sau:
-Key: VITE_API_KEY
-Value: [Dán API Key Gemini của bạn vào đây]
-Nhấn "Add variable" để lưu lại.

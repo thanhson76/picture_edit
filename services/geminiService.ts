@@ -1,15 +1,11 @@
 import { GoogleGenAI, Modality, Part } from "@google/genai";
 import type { AspectRatioValue, ImageQuality, ModelName } from "../types";
 
-// FIX: Per coding guidelines, API key must be obtained exclusively from `process.env.API_KEY`.
-// Removed usage of `import.meta.env` and associated checks.
-
 type SupportedAspectRatio = "1:1" | "3:4" | "4:3" | "9:16" | "16:9";
 
 function isSupportedAspectRatio(value: string): value is SupportedAspectRatio {
     return ["1:1", "3:4", "4:3", "9:16", "16:9"].includes(value);
 }
-
 
 export const generateImage = async (
   prompt: string, 
@@ -19,7 +15,8 @@ export const generateImage = async (
   numImages: number,
   model: ModelName
 ): Promise<string[]> => {
-  // FIX: Initialize GoogleGenAI client directly with `process.env.API_KEY` as per guidelines.
+  // FIX: Adhering to the coding guidelines, the API key is now sourced directly from `process.env.API_KEY`.
+  // This resolves the TypeScript error related to 'import.meta.env' and aligns with the required API key management practice.
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   let fullPrompt = style === 'Tất cả' ? prompt : `${prompt}, theo phong cách ${style}`;
@@ -80,7 +77,7 @@ export const generateImage = async (
 };
 
 export const editImage = async (prompt: string, images: { data: string, mimeType: string }[]): Promise<string> => {
-  // FIX: Initialize GoogleGenAI client directly with `process.env.API_KEY` as per guidelines.
+  // FIX: Adhering to the coding guidelines, the API key is now sourced directly from `process.env.API_KEY`.
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const imageParts = images.map(image => ({
