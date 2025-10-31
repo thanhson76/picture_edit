@@ -10,6 +10,31 @@ interface OutputPanelProps {
     onSelectForEditing: (imageUrl: string) => void;
 }
 
+const ErrorMessage: React.FC<{ message: string }> = ({ message }) => {
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
+    const match = message.match(linkRegex);
+
+    if (!match) {
+        return <p className="text-sm">{message}</p>;
+    }
+
+    const textBefore = message.substring(0, match.index);
+    const linkText = match[1];
+    const linkUrl = match[2];
+    const textAfter = message.substring(match.index! + match[0].length);
+
+    return (
+        <p className="text-sm">
+            {textBefore}
+            <a href={linkUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline hover:text-blue-300">
+                {linkText}
+            </a>
+            {textAfter}
+        </p>
+    );
+};
+
+
 const OutputPanel: React.FC<OutputPanelProps> = ({ images, history, isLoading, error, onCreateNew, onSelectForEditing }) => {
     return (
         <div className="bg-[#1E293B] rounded-lg h-full flex flex-col p-4">
@@ -21,12 +46,12 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ images, history, isLoading, e
                     </div>
                 )}
                 {!isLoading && error && (
-                    <div className="m-auto flex flex-col items-center justify-center gap-4 text-center text-red-400">
+                    <div className="m-auto flex flex-col items-center justify-center gap-4 text-center text-red-400 max-w-md">
                          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="font-semibold">Đã xảy ra lỗi</p>
-                        <p className="text-sm">{error}</p>
+                        <ErrorMessage message={error} />
                     </div>
                 )}
                 {!isLoading && !error && images && images.length > 0 && (

@@ -7,6 +7,17 @@ function isSupportedAspectRatio(value: string): value is SupportedAspectRatio {
     return ["1:1", "3:4", "4:3", "9:16", "16:9"].includes(value);
 }
 
+const handleApiError = (error: unknown): Error => {
+    console.error("Lỗi API:", error);
+    if (error instanceof Error) {
+        if (error.message.includes('RESOURCE_EXHAUSTED') || error.message.includes('429')) {
+             return new Error("Lỗi giới hạn sử dụng (Quota). Điều này thường xảy ra khi dự án Google Cloud của bạn chưa bật tính năng thanh toán (billing). Vui lòng [bật thanh toán cho dự án của bạn](https://cloud.google.com/billing/docs/how-to/enable-billing) để tiếp tục sử dụng.");
+        }
+        return new Error(`Không thể tạo ảnh: ${error.message}`);
+    }
+    return new Error("Không thể tạo ảnh. Vui lòng thử lại.");
+}
+
 export const generateImage = async (
   prompt: string, 
   style: string,
@@ -15,8 +26,6 @@ export const generateImage = async (
   numImages: number,
   model: ModelName
 ): Promise<string[]> => {
-  // FIX: Adhering to the coding guidelines, the API key is now sourced directly from `process.env.API_KEY`.
-  // This resolves the TypeScript error related to 'import.meta.env' and aligns with the required API key management practice.
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   let fullPrompt = style === 'Tất cả' ? prompt : `${prompt}, theo phong cách ${style}`;
@@ -68,16 +77,11 @@ export const generateImage = async (
         throw new Error(`Model không được hỗ trợ: ${model}`);
     }
   } catch (error) {
-    console.error("Lỗi khi tạo ảnh với Gemini:", error);
-    if (error instanceof Error) {
-        throw new Error(`Không thể tạo ảnh: ${error.message}`);
-    }
-    throw new Error("Không thể tạo ảnh. Vui lòng thử lại.");
+    throw handleApiError(error);
   }
 };
 
 export const editImage = async (prompt: string, images: { data: string, mimeType: string }[]): Promise<string> => {
-  // FIX: Adhering to the coding guidelines, the API key is now sourced directly from `process.env.API_KEY`.
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const imageParts = images.map(image => ({
@@ -119,10 +123,6 @@ export const editImage = async (prompt: string, images: { data: string, mimeType
       throw new Error("Không có hình ảnh nào được tạo từ API.");
 
   } catch (error) {
-      console.error("Lỗi khi chỉnh sửa ảnh với Gemini:", error);
-      if (error instanceof Error) {
-          throw new Error(`Không thể tạo ảnh: ${error.message}`);
-      }
-      throw new Error("Không thể tạo ảnh. Vui lòng thử lại.");
+      throw handleApiError(error);
   }
 };
